@@ -1,3 +1,5 @@
+import '../../widgets/email_document_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -205,6 +207,10 @@ class _PaymentReceiptDetailScreenState
                   onPressed: _busy ? null : _download,
                   icon: const Icon(Icons.download_outlined),
                   label: const Text('Descargar recibo PDF'),
+                ),
+                EmailDocumentButton(
+                  pdfPath: r['pdf_path'] as String,
+                  enabled: !_busy,
                 ),
                 if (_busy) const LinearProgressIndicator(),
               ],

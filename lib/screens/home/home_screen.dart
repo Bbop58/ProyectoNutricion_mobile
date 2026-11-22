@@ -1,3 +1,4 @@
+import '../../widgets/email_document_button.dart';
 import '../subscriptions/subscription_receipts_section.dart';
 import '../../services/api_service.dart';
 
@@ -1058,6 +1059,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   Wrap(
                     spacing: 8,
                     children: [
+                      EmailDocumentButton(
+                        pdfPath: '/appointments/${appointment.id}/pdf',
+                      ),
+                      if (appointment.paymentStatus == 'PAID')
+                        EmailDocumentButton(
+                          pdfPath:
+                              '/appointments/${appointment.id}/receipt/pdf',
+                        ),
                       TextButton.icon(
                         onPressed: () =>
                             _downloadAppointmentPdf(appointment.id),

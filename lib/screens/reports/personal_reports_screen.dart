@@ -1,3 +1,5 @@
+import '../../widgets/email_document_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -784,6 +786,16 @@ class _PersonalReportsScreenState extends State<PersonalReportsScreen> {
                       : () => _export('excel'),
                   icon: const Icon(Icons.table_chart),
                   label: const Text('Descargar Excel'),
+                ),
+                EmailDocumentButton(
+                  enabled: !_busy && (_reportQuery != null || _savedId != null),
+                  pdfPath: _savedId != null
+                      ? '/reports/saved/$_savedId/export?file_format=pdf'
+                      : '/reports/export/pdf',
+                  excelPath: _savedId != null
+                      ? '/reports/saved/$_savedId/export?file_format=excel'
+                      : '/reports/export/excel',
+                  payload: _reportQuery,
                 ),
               ],
             ),

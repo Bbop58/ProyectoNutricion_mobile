@@ -1,3 +1,5 @@
+import '../../widgets/email_document_button.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -209,6 +211,9 @@ class _SubscriptionReceiptsSectionState
                             : null,
                         icon: const Icon(Icons.download_outlined),
                         label: const Text('Descargar PDF'),
+                      ),
+                      EmailDocumentButton(
+                        pdfPath: '/subscriptions/receipts/${receipt.id}/pdf',
                       ),
                     ],
                   ),

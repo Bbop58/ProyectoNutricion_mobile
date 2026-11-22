@@ -1,3 +1,4 @@
+import '../../widgets/email_document_button.dart';
 import '../../modo_offline/conectividad_service.dart';
 import '../../services/offline_wallet_service.dart';
 import '../../modo_offline/cola_sincronizacion_service.dart';
@@ -569,20 +570,29 @@ class _WalletScreenState extends State<WalletScreen>
                 onTap: () => _showReceipt(p),
                 title: Text(p['concept']),
                 subtitle: Text('\$${p['amount']} USD · ${p['payment_method']}'),
-                trailing: IconButton(
-                  tooltip: 'Descargar comprobante',
-                  onPressed: _busy
-                      ? null
-                      : () => _run(() async {
-                          final bytes = await _api.getBytes(
-                            '/payments/${p['id']}/pdf',
-                          );
-                          await saveReceiptPdf(
-                            bytes,
-                            'Comprobante_${p['id']}.pdf',
-                          );
-                        }),
-                  icon: const Icon(Icons.download_outlined),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: 'Descargar comprobante',
+                      onPressed: _busy
+                          ? null
+                          : () => _run(() async {
+                              final bytes = await _api.getBytes(
+                                '/payments/${p['id']}/pdf',
+                              );
+                              await saveReceiptPdf(
+                                bytes,
+                                'Comprobante_${p['id']}.pdf',
+                              );
+                            }),
+                      icon: const Icon(Icons.download_outlined),
+                    ),
+                    EmailDocumentButton(
+                      pdfPath: '/payments/${p['id']}/pdf',
+                      enabled: !_busy,
+                    ),
+                  ],
                 ),
               ),
             const SizedBox(height: 12),

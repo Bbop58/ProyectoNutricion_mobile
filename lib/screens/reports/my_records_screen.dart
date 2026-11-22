@@ -1,3 +1,5 @@
+import '../../widgets/email_document_button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:provider/provider.dart';
@@ -233,6 +235,11 @@ class _MyRecordsScreenState extends State<MyRecordsScreen> {
                     onPressed: _exporting ? null : () => _export('excel'),
                     icon: const Icon(Icons.table_chart_outlined),
                     label: const Text('Descargar Excel'),
+                  ),
+                  EmailDocumentButton(
+                    enabled: !_exporting,
+                    pdfPath: '/reports/mine/export?$_query&file_format=pdf',
+                    excelPath: '/reports/mine/export?$_query&file_format=excel',
                   ),
                 ],
               ),
