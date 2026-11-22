@@ -228,8 +228,9 @@ class CarlitosChatService extends ChangeNotifier {
       if (!_current(owner, generation)) return false;
       Map<String, dynamic>? owned(dynamic data) {
         if (data is! Map ||
-            (data['patient_id'] != null && data['patient_id'] != owner))
+            (data['patient_id'] != null && data['patient_id'] != owner)) {
           return null;
+        }
         return Map<String, dynamic>.from(data);
       }
 

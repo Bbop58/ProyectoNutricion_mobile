@@ -396,7 +396,7 @@ void main() {
         StorageService(),
         client: MockClient((r) async {
           dynamic body = [];
-          if (r.url.path.endsWith('/wallet'))
+          if (r.url.path.endsWith('/wallet')) {
             body = {
               'balance': 15,
               'currency': 'USD',
@@ -408,7 +408,8 @@ void main() {
                 },
               ],
             };
-          if (r.url.path.endsWith('/my-payments'))
+          }
+          if (r.url.path.endsWith('/my-payments')) {
             body = [
               {
                 'id': 'topup',
@@ -443,6 +444,7 @@ void main() {
                 'payment_method': 'PENDING',
               },
             ];
+          }
           if (r.url.path.endsWith('/payments/capture')) captures++;
           return http.Response(
             jsonEncode(body),
@@ -483,9 +485,10 @@ void main() {
         client: MockClient((r) async {
           dynamic body = [];
           var status = 200;
-          if (r.url.path.endsWith('/wallet'))
+          if (r.url.path.endsWith('/wallet')) {
             body = {'balance': 10, 'movements': []};
-          if (r.url.path.endsWith('/my-payments'))
+          }
+          if (r.url.path.endsWith('/my-payments')) {
             body = [
               {
                 'id': 'p',
@@ -496,6 +499,7 @@ void main() {
                 'paypal_order_id': selected ? 'ORDER' : null,
               },
             ];
+          }
           if (r.url.path.endsWith('/payments/capture')) {
             status = 409;
             body = {'detail': 'Pendiente'};

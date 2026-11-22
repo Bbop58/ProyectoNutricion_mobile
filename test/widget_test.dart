@@ -78,66 +78,38 @@ void main() {
     },
   );
 
-  testWidgets('LoginScreen validates password complexity rules', (
-    WidgetTester tester,
-  ) async {
-    final storageService = StorageService();
-    final apiService = ApiService(storageService);
-    final authService = AuthService(apiService, storageService);
-    final themeService = ThemeService();
+  testWidgets(
+    'LoginScreen accepts existing passwords without registration complexity rules',
+    (WidgetTester tester) async {
+      final storageService = StorageService();
+      final apiService = ApiService(storageService);
+      final authService = AuthService(apiService, storageService);
+      final themeService = ThemeService();
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          Provider<StorageService>.value(value: storageService),
-          Provider<ApiService>.value(value: apiService),
-          ChangeNotifierProvider<AuthService>.value(value: authService),
-          ChangeNotifierProvider<ThemeService>.value(value: themeService),
-        ],
-        child: MaterialApp(
-          theme: AppTheme.darkTheme,
-          home: const LoginScreen(),
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            Provider<StorageService>.value(value: storageService),
+            Provider<ApiService>.value(value: apiService),
+            ChangeNotifierProvider<AuthService>.value(value: authService),
+            ChangeNotifierProvider<ThemeService>.value(value: themeService),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            home: const LoginScreen(),
+          ),
         ),
-      ),
-    );
+      );
 
-    // Enter valid email and short/weak password
-    await tester.enterText(
-      find.byType(TextFormField).first,
-      'test@example.com',
-    );
-    await tester.enterText(find.byType(TextFormField).last, 'pass');
-    await tester.ensureVisible(find.text('Iniciar sesión'));
-    await tester.tap(find.text('Iniciar sesión'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Mínimo 8 caracteres'), findsOneWidget);
-
-    // Enter 8 characters without uppercase
-    await tester.enterText(find.byType(TextFormField).last, 'password123!');
-    await tester.ensureVisible(find.text('Iniciar sesión'));
-    await tester.tap(find.text('Iniciar sesión'));
-    await tester.pumpAndSettle();
-    expect(
-      find.text('Debe incluir al menos una letra mayúscula'),
-      findsOneWidget,
-    );
-
-    // Enter without number
-    await tester.enterText(find.byType(TextFormField).last, 'Password!@#');
-    await tester.ensureVisible(find.text('Iniciar sesión'));
-    await tester.tap(find.text('Iniciar sesión'));
-    await tester.pumpAndSettle();
-    expect(find.text('Debe incluir al menos un número'), findsOneWidget);
-
-    // Enter without special character
-    await tester.enterText(find.byType(TextFormField).last, 'Password123');
-    await tester.ensureVisible(find.text('Iniciar sesión'));
-    await tester.tap(find.text('Iniciar sesión'));
-    await tester.pumpAndSettle();
-    expect(
-      find.text('Debe incluir al menos un carácter especial'),
-      findsOneWidget,
-    );
-  });
+      final passwordField = tester.widget<TextFormField>(
+        find.byType(TextFormField).last,
+      );
+      expect(passwordField.validator!(''), isNotNull);
+      expect(
+        passwordField.validator!('0JyD3nNqfgjVpr0zk4XiO9bbsLc4D2lC'),
+        isNull,
+      );
+      expect(passwordField.validator!('pass'), isNull);
+    },
+  );
 }

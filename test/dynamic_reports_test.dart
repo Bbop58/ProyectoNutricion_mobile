@@ -48,7 +48,7 @@ void main() {
       final api = ApiService(
         StorageService(),
         client: MockClient((request) async {
-          if (request.url.path.endsWith('/entities'))
+          if (request.url.path.endsWith('/entities')) {
             return http.Response(
               jsonEncode([
                 {
@@ -59,11 +59,13 @@ void main() {
               ]),
               200,
             );
-          if (request.url.path.endsWith('/scope'))
+          }
+          if (request.url.path.endsWith('/scope')) {
             return http.Response(
               jsonEncode({'companies': [], 'branches': []}),
               200,
             );
+          }
           if (request.url.path.endsWith('/voice-command')) {
             requests.add(jsonDecode(request.body));
             return http.Response(
@@ -75,8 +77,9 @@ void main() {
               200,
             );
           }
-          if (request.url.path.endsWith('/query'))
+          if (request.url.path.endsWith('/query')) {
             return http.Response(jsonEncode(report), 200);
+          }
           return http.Response('[]', 200);
         }),
       )..currentUserId = 'client';

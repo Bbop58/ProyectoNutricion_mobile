@@ -551,9 +551,13 @@ void main() {
       await tester.ensureVisible(find.text('Mis reportes'));
       await tester.tap(find.text('Mis reportes'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Mis registros: alimentación, pagos y citas'));
+      await tester.pumpAndSettle();
       expect(find.text('Mi almuerzo registrado'), findsOneWidget);
       expect(find.text('Descargar PDF'), findsOneWidget);
       expect(find.text('Descargar Excel'), findsOneWidget);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
       await tester.pageBack();
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Alimentación y fotos IA').first);
