@@ -1,3 +1,6 @@
+import '../subscriptions/subscription_receipts_section.dart';
+import '../../services/api_service.dart';
+
 import 'dart:async';
 
 import '../payments/wallet_screen.dart';
@@ -1051,6 +1054,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     },
                   ),
                 ],
+                if (!appointment.isOfflinePending)
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () =>
+                            _downloadAppointmentPdf(appointment.id),
+                        icon: const Icon(Icons.picture_as_pdf_outlined),
+                        label: Text(
+                          appointment.status == 'CANCELLED'
+                              ? 'Cancelación PDF'
+                              : 'Constancia PDF',
+                        ),
+                      ),
+                      if (appointment.paymentStatus == 'PAID')
+                        TextButton.icon(
+                          onPressed: () => _downloadAppointmentPdf(
+                            appointment.id,
+                            receipt: true,
+                          ),
+                          icon: const Icon(Icons.receipt_long_outlined),
+                          label: const Text('Recibo PDF'),
+                        ),
+                    ],
+                  ),
                 if (appointment.isOfflinePending) ...[
                   const SizedBox(height: 12),
                   const Text(
@@ -1071,6 +1099,35 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ],
       ],
     );
+  }
+
+  Future<void> _downloadAppointmentPdf(
+    String id, {
+    bool receipt = false,
+  }) async {
+    try {
+      final bytes = await context.read<ApiService>().getBytes(
+        '/appointments/$id/${receipt ? 'receipt/pdf' : 'pdf'}',
+      );
+      final saved = await saveReceiptPdf(
+        bytes,
+        '${receipt ? 'Recibo' : 'Constancia'}_cita_$id.pdf',
+      );
+      if (mounted && saved) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('PDF guardado.')));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'No se pudo descargar el PDF. Comprueba tu conexión.',
+            ),
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildClaimCodeCard({
