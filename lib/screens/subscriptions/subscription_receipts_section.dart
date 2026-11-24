@@ -1,4 +1,5 @@
 import '../../widgets/email_document_button.dart';
+import 'wallet_refunds_screen.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -198,6 +199,16 @@ class _SubscriptionReceiptsSectionState
                   Wrap(
                     spacing: 8,
                     children: [
+                      if (receipt.planName == 'CLIENTE_PREMIUM')
+                        TextButton.icon(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const WalletRefundsScreen(),
+                            ),
+                          ),
+                          icon: const Icon(Icons.currency_exchange),
+                          label: const Text('Devoluciones a wallet'),
+                        ),
                       TextButton.icon(
                         onPressed: _busyId == null
                             ? () => _open(receipt, download: false)

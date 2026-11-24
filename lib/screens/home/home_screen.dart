@@ -1,6 +1,7 @@
 import '../../widgets/email_document_button.dart';
 import '../care/care_screen.dart';
 import '../subscriptions/subscription_receipts_section.dart';
+import '../subscriptions/wallet_refunds_screen.dart';
 import '../../services/api_service.dart';
 
 import 'dart:async';
@@ -2255,6 +2256,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const NutritionHeading('Perfil'),
+          if (user?.roleId == 'CLIENTE')
+            ListTile(
+              leading: const Icon(Icons.currency_exchange),
+              title: const Text('Devoluciones a wallet'),
+              subtitle: const Text('Solicitar devolución total de Premium IA'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const WalletRefundsScreen()),
+              ),
+            ),
           ListTile(
             leading: const Icon(Icons.monitor_heart_outlined),
             title: const Text('Seguimiento y mensajes'),
